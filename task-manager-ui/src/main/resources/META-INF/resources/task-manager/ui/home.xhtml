@@ -5,6 +5,113 @@
 <h:head>
 </h:head>
 <h:body>
-    Current Time Backend (Proof of End to End): #{homeView.foo}
+    <div>
+        <h:form id="tasks-form">
+            <p:growl id="messages" showDetail="true"/>
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="New" icon="pi pi-plus" actionListener="#{homeView.openNew}"
+                                     update=":task-dialogs:manage-task-content"
+                                     oncomplete="PF('manageTaskDialog').show()"
+                                     styleClass="ui-button-success" style="margin-right: .5rem">
+                        <p:resetInput target=":task-dialogs:manage-task-content"/>
+                    </p:commandButton>
+                    <p:commandButton id="delete-tasks-button" value="#{homeView.deleteButtonMessage}"
+                                     icon="pi pi-trash" actionListener="#{homeView.deleteSelectedTasks}"
+                                     styleClass="ui-button-danger" disabled="#{!homeView.hasSelectedTasks()}"
+                                     update="@this">
+                        <p:confirm header="Confirmation" message="Delete the selected tasks?"
+                                   icon="pi pi-exclamation-triangle"/>
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+            <p:dataTable id="dt-tasks" widgetVar="dtTasks" var="task" value="#{homeView.tasks}"
+                         reflow="true" selectionMode="multiple"
+                         selection="#{homeView.selectedTasks}"
+                         rowKey="#{task.id}" paginator="true" rows="10" selectionRowMode="add"
+                         paginatorPosition="bottom">
+                <f:facet name="header">
+                    <div>
+                        <span style="font-weight: bold">Text Search: </span>
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText id="globalFilter" onkeyup="PrimeFaces.debounce(() => PF('dtTasks').filter())"
+                                     placeholder="Search"/>
+                    </span>
+                    </div>
+                </f:facet>
+                <p:ajax event="rowSelect" update=":tasks-form:delete-tasks-button"/>
+                <p:ajax event="rowUnselect" update=":tasks-form:delete-tasks-button"/>
+                <p:ajax event="rowSelectCheckbox" update=":tasks-form:delete-tasks-button"/>
+                <p:ajax event="rowUnselectCheckbox" update=":tasks-form:delete-tasks-button"/>
+                <p:ajax event="toggleSelect" update=":tasks-form:delete-tasks-button"/>
+                <p:column selectionBox="true"></p:column>
+                <p:column headerText="ID" sortBy="#{task.id}" filterBy="#{task.id}">
+                    <h:outputText value="#{task.id}"/>
+                </p:column>
+                <p:column headerText="Title" sortBy="#{task.title}" filterBy="#{task.title}">
+                    <h:outputText value="#{task.title}"/>
+                </p:column>
+                <p:column headerText="Description" sortBy="#{task.description}" filterBy="#{task.description}">
+                    <h:outputText value="#{task.description}"/>
+                </p:column>
+                <p:column headerText="Status" sortBy="#{task.status}" filterBy="#{task.status}">
+                    <h:outputText value="#{task.status}"/>
+                </p:column>
+                <p:column ariaHeaderText="Actions">
+                    <p:commandButton icon="pi pi-pencil" update=":task-dialogs:manage-task-content"
+                                     oncomplete="PF('manageTaskDialog').show()"
+                                     styleClass="edit-button rounded-button ui-button-success" process="@this">
+                        <f:setPropertyActionListener value="#{task}" target="#{homeView.selectedTask}"/>
+                        <p:resetInput target=":task-dialogs:manage-task-content"/>
+                    </p:commandButton>
+                    <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                     process="@this"
+                                     oncomplete="PF('deleteTaskDialog').show()">
+                        <f:setPropertyActionListener value="#{task}" target="#{homeView.selectedTask}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <h:form id="task-dialogs">
+            <p:dialog header="Task Details" showEffect="fade" modal="true" widgetVar="manageTaskDialog"
+                      responsive="true">
+                <p:outputPanel id="manage-task-content" class="ui-fluid">
+                    <p:outputPanel rendered="#{not empty homeView.selectedTask}">
+                        <div class="field">
+                            <p:outputLabel for="title">Title</p:outputLabel>
+                            <p:inputText id="title" value="#{homeView.selectedTask.title}" required="true"/>
+                        </div>
+                        <div class="field">
+                            <p:outputLabel for="description">Description</p:outputLabel>
+                            <p:inputTextarea id="description" value="#{homeView.selectedTask.description}"/>
+                        </div>
+                        <div class="field">
+                            <p:outputLabel for="status">Status</p:outputLabel>
+                            <p:inputText id="status" value="#{homeView.selectedTask.status}" required="true"/>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <f:facet name="footer">
+                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{homeView.saveTask}"
+                                     update="manage-task-content" process="manage-task-content @this"/>
+                    <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageTaskDialog').hide()"
+                                     class="ui-button-secondary" type="button"/>
+                </f:facet>
+            </p:dialog>
+            <p:confirmDialog widgetVar="deleteTaskDialog" showEffect="fade" width="300"
+                             message="Delete the task?" header="Confirm" severity="warn">
+                <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{homeView.deleteTask}"
+                                 process="@this" update=":tasks-form:delete-tasks-button"
+                                 oncomplete="PF('deleteTaskDialog').hide()"/>
+                <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                 onclick="PF('deleteTaskDialog').hide()"/>
+            </p:confirmDialog>
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                 icon="pi pi-times"/>
+            </p:confirmDialog>
+        </h:form>
+    </div>
 </h:body>
 </html>
