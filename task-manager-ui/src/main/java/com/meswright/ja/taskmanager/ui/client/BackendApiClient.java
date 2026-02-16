@@ -13,6 +13,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Service
 @RequiredArgsConstructor
+/**
+ * Responsible for being the REST Client to the Task Management Backend for the UI.
+ */
 public class BackendApiClient {
 
     private static final String URL = "http://localhost:8081/task-manager/api/v1/tasks";

@@ -12,6 +12,9 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+/**
+ * Responsible for mediating the Data the UI needs.
+ */
 public class UiDataProvider {
 
     private final BackendApiClient client;

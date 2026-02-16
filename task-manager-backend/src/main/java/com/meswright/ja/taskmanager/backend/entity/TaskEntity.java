@@ -7,6 +7,9 @@ import lombok.Data;
 
 import java.util.UUID;
 
+/**
+ * Task POJO purely for persistence purposes.
+ */
 @Entity
 @Data
 @Table(name = "Task")
