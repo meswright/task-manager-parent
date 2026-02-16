@@ -40,6 +40,10 @@
             <groupId>com.meswright.ja</groupId>
             <artifactId>task-manager-external</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

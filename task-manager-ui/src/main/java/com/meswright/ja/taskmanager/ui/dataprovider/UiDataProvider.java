@@ -1,12 +1,13 @@
 package com.meswright.ja.taskmanager.ui.dataprovider;
 
 import com.meswright.ja.taskmanager.ui.client.BackendApiClient;
+import com.meswright.ja.taskmanager.ui.mapper.TaskMapper;
 import com.meswright.ja.taskmanager.ui.pojo.TaskUio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -14,27 +15,25 @@ import java.util.UUID;
 public class UiDataProvider {
 
     private final BackendApiClient client;
+    private final TaskMapper taskMapper;
 
     public List<TaskUio> getTasks() {
-        List<TaskUio> tasks = new ArrayList<>();
-        TaskUio taskUio = new TaskUio();
-        taskUio.setId(UUID.randomUUID());
-        taskUio.setTitle("Test Task 1");
-        taskUio.setDescription("This is a test task 1");
-        taskUio.setStatus("Status 1");
-        tasks.add(taskUio);
-        taskUio = new TaskUio();
-        taskUio.setId(UUID.randomUUID());
-        taskUio.setTitle("Test Task 2");
-        taskUio.setDescription("This is a test task 2");
-        taskUio.setStatus("Status 2");
-        tasks.add(taskUio);
-        taskUio = new TaskUio();
-        taskUio.setId(UUID.randomUUID());
-        taskUio.setTitle("Test Task 3");
-        taskUio.setDescription("This is a test task 3");
-        taskUio.setStatus("Status 3");
-        tasks.add(taskUio);
-        return tasks;
+        return taskMapper.toUios(client.getAllTasks());
+    }
+
+    public void createTask(TaskUio task) {
+        client.createTask(taskMapper.toDto(task));
+    }
+
+    public void updateTask(TaskUio task) {
+        client.updateTask(taskMapper.toDto(task));
+    }
+
+    public void deleteTask(TaskUio task) {
+        client.deleteTask(taskMapper.toDto(task));
+    }
+
+    public void deleteTasks(List<TaskUio> tasks) {
+        client.deleteTasks(taskMapper.toDtos(tasks));
     }
 }

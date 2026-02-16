@@ -1,5 +1,10 @@
 spring:
   application:
     name: task-manager-backend
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:test
+    username: SA
+    password:
 server:
   port : 8081

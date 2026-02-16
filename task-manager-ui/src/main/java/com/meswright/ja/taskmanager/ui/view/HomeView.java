@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Named
 @ViewScoped
@@ -55,8 +56,10 @@ public class HomeView implements Serializable {
     public void saveTask() {
         if (!tasks.contains(selectedTask)) {
             tasks.add(selectedTask);
+            dataProvider.createTask(selectedTask);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Task Added"));
         } else {
+            dataProvider.updateTask(selectedTask);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Task Updated"));
         }
         PrimeFaces.current().executeScript("PF('manageTaskDialog').hide()");
@@ -66,6 +69,7 @@ public class HomeView implements Serializable {
     public void deleteTask() {
         tasks.remove(selectedTask);
         selectedTasks.remove(selectedTask);
+        dataProvider.deleteTask(selectedTask);
         selectedTask = null;
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Task Removed"));
         PrimeFaces.current().ajax().update("tasks-form:messages", "tasks-form:dt-tasks");
@@ -76,7 +80,6 @@ public class HomeView implements Serializable {
             int size = selectedTasks.size();
             return size > 1 ? size + " tasks selected" : "1 task selected";
         }
-
         return "Delete";
     }
 
@@ -86,6 +89,7 @@ public class HomeView implements Serializable {
 
     public void deleteSelectedTasks() {
         tasks.removeAll(selectedTasks);
+        dataProvider.deleteTasks(selectedTasks);
         selectedTasks = null;
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Tasks Removed"));
         PrimeFaces.current().ajax().update("tasks-form:messages", "tasks-form:dt-tasks");
