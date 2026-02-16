@@ -1,17 +1,26 @@
 ## Build Requirements
 Java JDK version 21 installed.
+
 Maven version 3.14.1 installed.
+
 Ensure both Java and Maven are in your PATH.
+
 ## Build Instructions
 Clone the codebase.
+
 Open a terminal in the top directory of the project and run `mvn clean install`.
-see the JARs in:
+
+See the JARs in:
 - `[...]/task-manager-parent/task-manager-ui/target`
 - `[...]/task-manager-parent/task-manager-ui/target`
+- 
 ## Run Instructions
 Ensure that ports 8080 and 8081 are free on the machine running this app.
+
 For each JAR, run `java -jar  [JAR FILE NAME GOES HERE]`
-on a web browser, visit `http://localhost:8080/task-manager/ui/home.jsf`
+
+On a web browser, visit `http://localhost:8080/task-manager/ui/home.jsf`
+
 ## If there was more time
 ### - UI does not handle errors in the backend.
 When the backend throws non-2xx http responses, the UI should show a useful error message / redirection to an error page.
