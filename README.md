@@ -13,7 +13,7 @@ Open a terminal in the top directory of the project and run `mvn clean install`.
 See the JARs in:
 - `[...]/task-manager-parent/task-manager-ui/target`
 - `[...]/task-manager-parent/task-manager-ui/target`
-- 
+
 ## Run Instructions
 Ensure that ports 8080 and 8081 are free on the machine running this app.
 
